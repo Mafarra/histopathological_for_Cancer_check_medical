@@ -25,22 +25,22 @@ class GlobalDialogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppConst.appScreenHight / 2,
+      height:  AppConst.appScreenHight>=820? AppConst.appScreenHight / 2.5:AppConst.appScreenHight /2.2,
       decoration: BoxDecoration(
           color: AppColor.whiteColor,
           borderRadius: const BorderRadius.all(Radius.circular(20))),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
       margin: const EdgeInsets.symmetric(horizontal: 40),
       child: Scaffold(
         backgroundColor: AppColor.whiteColor,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  const SizedBox(height: 28),
                   Column(
                     children: [
                       Image.asset(
@@ -80,25 +80,21 @@ class GlobalDialogWidget extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
             Align(
               alignment: Alignment.bottomRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                      onPressed: onCancelBtnClick ?? () {},
-                      child: CustomText(
-                        text: "Cancel",
-                        textColor: AppColor.primaryColor,
-                        textAlign: TextAlign.right,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ],
-              ),
+              child: TextButton(
+                  onPressed: onCancelBtnClick ?? () {},
+                  child: FittedBox(
+                    child: CustomText(
+                      text: "Cancel",
+                      textColor: AppColor.primaryColor,
+                      textAlign: TextAlign.right,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
             ),
-            SizedBox(height: AppConst.appScreenWidth / 12),
+            // const SizedBox(height: 10),
           ],
         ),
       ),

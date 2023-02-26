@@ -25,78 +25,93 @@ class _UploaPageState extends State<UploaPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: AppConst.appScreenHight / 3,
+      body: ListView(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: AppConst.appScreenHight / 4,
+                ),
+                Center(
+                  child: Image.asset(
+                    AppMedia.uploadPageImage,
+                    fit: BoxFit.cover,
+                    width: AppConst.appScreenWidth / 1.5,
+                    height: AppConst.appScreenHight / 5,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                FittedBox(
+                  child: CustomText(
+                    text: '''Upload\nHistopathological image''',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    textColor: AppColor.seconderyColor,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                FittedBox(
+                  child: CustomText(
+                    text:
+                        '''You can upload the\n Histopathological Image on this\n page to see if there is a breast \ncancer or not.''',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    textColor: AppColor.seconderyColor.withOpacity(.60),
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: AppConst.appScreenHight / 8,
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: CustomTextButonWithIcon(
+                    text: 'Upload',
+                    isLeftIcon: true,
+                    textColor: Colors.white,
+                    backGroundColor: AppColor.primaryColor,
+                    icon: Icons.cloud_upload,
+                    iconColor: Colors.white,
+                    width: AppConst.appScreenWidth / 2,
+                    onClick: () {
+                      showGifDialog();
+                      showCustomDialog();
+                      gifController!.status = GifStatus.paused;
+                      // if (gifController!.status == GifStatus.playing) {
+                      //   gifController!.pause();
+                      // } else {
+                      //   gifController!.play();
+                      // }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: AppConst.appScreenHight / 20,
+                ),
+              ],
             ),
-            Center(
-              child: Image.asset(
-                AppMedia.uploadPageImage,
-                fit: BoxFit.cover,
-                width: AppConst.appScreenWidth / 1.5,
-                height: AppConst.appScreenHight / 5,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FittedBox(
-              child: CustomText(
-                text: '''Upload\nHistopathological image''',
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                textColor: AppColor.seconderyColor,
-                textAlign: TextAlign.center,
-                textDirection: TextDirection.ltr,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            FittedBox(
-              child: CustomText(
-                text:
-                    '''You can upload the\n Histopathological Image on this\n page to see if there is a breast \ncancer or not.''',
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                textColor: AppColor.seconderyColor.withOpacity(.60),
-                textAlign: TextAlign.center,
-                textDirection: TextDirection.ltr,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: AppConst.appScreenHight / 8,
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CustomTextButonWithIcon(
-                text: 'Upload',
-                isLeftIcon: true,
-                textColor: Colors.white,
-                backGroundColor: AppColor.primaryColor,
-                icon: Icons.cloud_upload,
-                iconColor: Colors.white,
-                width: AppConst.appScreenWidth / 2,
-                onClick: () {
-                  showCustomDialog();
-                  showGifDialog();
-                },
-              ),
-            ),
-            SizedBox(
-              height: AppConst.appScreenHight / 20,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -104,18 +119,32 @@ class _UploaPageState extends State<UploaPage> {
   void showCustomDialog() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       const Duration(seconds: 3);
-      showAnimatedDialog(GlobalDialogWidget(
-        isLoading: false,
-        onCancelBtnClick: () => Get.back(),
-      ));
+
+      // Get.back();
+      setState(() {});
+      Future.delayed(const Duration(seconds: 4), () {
+        gifController!.stop;
+        showAnimatedDialog(GlobalDialogWidget(
+            isLoading: false,
+            onCancelBtnClick: () {
+              gifController!.stop();
+              Get.back();
+              Get.back();
+            }));
+      });
     });
   }
 
   void showGifDialog() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      const Duration(seconds: 3);
+      const Duration(seconds: 2);
+      setState(() {
+        gifController!.play();
+      });
       showAnimatedDialog(showGifProcessing());
-      // Get.back();
+      Future.delayed(const Duration(milliseconds: 1300), () {
+        gifController!.status = GifStatus.paused;
+      });
     });
   }
 
@@ -130,7 +159,7 @@ class _UploaPageState extends State<UploaPage> {
               controller: gifController,
               fit: BoxFit.cover,
               alignment: Alignment.center,
-              fadeDuration: const Duration(seconds: 1),
+              fadeDuration: const Duration(milliseconds: 200),
               width: 150,
               height: 150,
               frameRate: 30,
